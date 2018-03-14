@@ -46,6 +46,7 @@ const SortBy = styled.select`
   background: no-repeat 95%/10px url(${arrow2}), white;
   border-radius: 2px;
   border: 1px solid rgba(0, 0, 0, 0.25);
+  color: gray;
 `
 
 const Close = styled.img`
@@ -71,7 +72,7 @@ class Header extends React.Component {
         {!currentVehicle && <Search />}
         {!currentVehicle && (
           <SortBy onChange={this.setSorting}>
-            <option value=""></option>
+            <option value="">Sort by...</option>
             <option value="sortByRecentlyAdded">Recently Added</option>
             <option value="sortByYearNewestOldest">Year: Newest-Oldest</option>
             <option value="sortByYearOldestNewest">Year: Oldest–Newest</option>

@@ -26,28 +26,28 @@ const vehicles = (state = vehiclesInitState, action) => {
       }
     case ActionTypes.SORT_BY_RECENTLY_ADDED:
       return {
-        unfiltered: sortBy(state, ['created_at']).reverse(),
-        filtered: sortBy(state, ['created_at']).reverse(),
+        unfiltered: sortBy(state.unfiltered, ['created_at']).reverse(),
+        filtered: sortBy(state.filtered, ['created_at']).reverse(),
       }
     case ActionTypes.SORT_BY_YEAR_NEWEST_OLDEST:
       return {
-        unfiltered: sortBy(state, ['year']).reverse(),
-        filtered: sortBy(state, ['year']).reverse(),
+        unfiltered: sortBy(state.unfiltered, ['year']).reverse(),
+        filtered: sortBy(state.filtered, ['year']).reverse(),
       }
     case ActionTypes.SORT_BY_YEAR_OLDEST_NEWEST:
       return {
-        unfiltered: sortBy(state, ['year']),
-        filtered: sortBy(state, ['year']),
+        unfiltered: sortBy(state.unfiltered, ['year']),
+        filtered: sortBy(state.filtered, ['year']),
       }
     case ActionTypes.SORT_BY_MILEAGE_LOW_HIGH:
       return {
-        unfiltered: sortBy(state, ['mileage']),
-        filtered: sortBy(state, ['mileage']),
+        unfiltered: sortBy(state.unfiltered, ['mileage']),
+        filtered: sortBy(state.filtered, ['mileage']),
       }
     case ActionTypes.SORT_BY_MILEAGE_HIGH_LOW:
       return {
-        unfiltered: sortBy(state, ['mileage']).reverse(),
-        filtered: sortBy(state, ['mileage']).reverse(),
+        unfiltered: sortBy(state.unfiltered, ['mileage']).reverse(),
+        filtered: sortBy(state.filtered, ['mileage']).reverse(),
       }
     case ActionTypes.FILTER:
       return {
