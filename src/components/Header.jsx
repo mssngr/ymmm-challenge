@@ -12,7 +12,7 @@ const HeaderContainer = styled.div`
   top: 0;
   left: 0;
   display: flex;
-  justify-content: space-between;
+  justify-content: ${props => props.currentVehicle ? 'flex-end' : 'space-between'};
   align-items: center;
   width: 100%;
   height: 60px;
@@ -67,7 +67,7 @@ class Header extends React.Component {
   render () {
     const {currentVehicle} = this.props
     return (
-      <HeaderContainer>
+      <HeaderContainer currentVehicle={currentVehicle}>
         {!currentVehicle && <Search />}
         {!currentVehicle && (
           <SortBy onChange={this.setSorting}>
