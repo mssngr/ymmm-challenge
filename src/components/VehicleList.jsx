@@ -1,26 +1,78 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import {connect} from 'react-redux'
 import axios from 'axios'
-import {get, isEmpty} from 'lodash'
+import {get, isEmpty, fill} from 'lodash'
 import styled from 'styled-components'
-import {Card, CardTitle} from 'react-materialize'
+import NumberFormat from 'react-number-format'
+import LoadingSpinner from 'react-md-spinner'
 
-import PlaceholderData from '../constants/PlaceholderData'
+import carIcon from '../assets/svg/carIcon.svg'
 import Actions from '../state/actions'
 
 const VehiclesContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start;
-  align-items: flex-end;
+  justify-content: center;
+  margin-top: 60px;
+
+  @media (min-width: 1280px) {
+    max-width: 900px;
+  }
 `
 
 const VehicleListing = styled.div`
-  width: 25vw;
-  height: 25vw;
-  max-width: 400px;
-  max-height: 400px;
+  width: 100vw;
+  height: 100vw;
+  padding: 15px;
+
+  @media (min-width: 720px) {
+    width: 300px;
+    height: 300px;
+  }
 `
+
+const VehicleCard = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  color: #92a0ab;
+  background-color: white;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.14), 0 2px 4px 0 rgba(0, 0, 0, 0.12), 0 1px 10px 0 rgba(0, 0, 0, 0.2);
+  transition-property: opacity;
+  transition-duration: 200ms;
+
+  :hover {
+    opacity: 0.7;
+  }
+`
+
+const CardContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 100%;
+  height: 30%;
+  padding: 15px;
+`
+
+const CardTitle = styled.h3`
+  font-size: 14px;
+  color: black;
+`
+
+const VehicleImage = styled.div`
+  width: 100%;
+  height: 70%;
+  background: no-repeat center/cover url(${props => props.src}), no-repeat center/cover url(${carIcon});
+`
+
+// const VehiclePagination = styled(Pagination)`
+//   li.waves-effect.active {
+//     background-color: #007aff;
+//   }
+// `
 
 const vehicleEndpoint = 'https://gist.githubusercontent.com/creatifyme/2a334c00a117097bfdb47f031edf292c/raw/efb52ecf1cf92e2261f504ec7639c68b5ff390bd/cars.json'
 
@@ -28,6 +80,8 @@ class VehicleList extends React.Component {
   state = {
     // The vehicle list is considered "loading" if vehicle data has not yet populated
     loading: isEmpty(this.props.vehicleData),
+    // The current "page" of vehicles
+    currentPage: 1,
   }
 
   componentDidMount () {
@@ -65,25 +119,46 @@ class VehicleList extends React.Component {
     }
   }
 
+  setPage = newPage => {
+    this.setState({currentPage: newPage})
+  }
+
+  setSorting = e => {
+    const method = e.target.value
+    method && this.props[method]()
+  }
+
   render () {
-    const {vehicleData} = this.props
+    const {vehicleData, itemsPerPage, currentPage} = this.props
     const {loading} = this.state
-    const vehicles = loading ? PlaceholderData : vehicleData
-    console.log(vehicles)
+    const lastItem = currentPage * itemsPerPage
+    const firstItem = lastItem - itemsPerPage
+    const vehicles = loading ? fill(Array(itemsPerPage), '') : vehicleData.slice(firstItem, lastItem)
     return (
       <VehiclesContainer>
         {vehicles.map((vehicle, index) => (
-          <VehicleListing>
-            <Card
-              key={`Vehicle-${index}`}
-              title={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
-              header={<CardTitle reveal image={vehicle.image_url} waves='light'/>}
-              reveal={(
-                <p>Here is some more information about this product that is only revealed once clicked on.</p>
-              )}
-            >
-              <p><a href="#">This is a link</a></p>
-            </Card>
+          <VehicleListing key={`Vehicle-${index}`}>
+            <VehicleCard>
+              {loading
+                ? <LoadingSpinner singleColor="#007aff" size={100} />
+                : (
+                  <Fragment>
+                    <VehicleImage src={vehicle.image_url} />
+                    <CardContent>
+                      <CardTitle>{`${vehicle.year} ${vehicle.make} ${vehicle.model}`}</CardTitle>
+                      <p>
+                        <NumberFormat
+                          value={vehicle.mileage}
+                          suffix=" mi"
+                          displayType="text"
+                          thousandSeparator
+                        />
+                      </p>
+                    </CardContent>
+                  </Fragment>
+                )
+              }
+            </VehicleCard>
           </VehicleListing>
         ))}
       </VehiclesContainer>
@@ -92,7 +167,9 @@ class VehicleList extends React.Component {
 }
 
 const mapState = state => ({
-  vehicleData: state.vehicles,
+  vehicleData: get(state, 'vehicles'),
+  itemsPerPage: get(state, 'pages.itemsPerPage'),
+  currentPage: get(state, 'pages.currentPage'),
 })
 
 const mapActions = {
