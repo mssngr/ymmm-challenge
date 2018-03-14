@@ -3,20 +3,57 @@ import {get, sortBy} from 'lodash'
 
 import {types as ActionTypes} from './actions'
 
-const vehicles = (state = [], action) => {
+const vehiclesInitState = {
+  // "unfiltered" is for reference of the vehicle data untouched by filtering
+  unfiltered: [],
+  // "filtered" is the vehicle data that is free to be filtered or otherwise irreversibly altered
+  filtered: [],
+  // The currently displaying vehicle details
+  currentVehicle: null,
+}
+
+const vehicles = (state = vehiclesInitState, action) => {
   switch (action.type) {
     case ActionTypes.POPULATE_VEHICLES:
-      return get(action, 'payload.vehicleData', state)
+      return {
+        unfiltered: get(action, 'payload.vehicleData', state.unfiltered),
+        filtered: get(action, 'payload.vehicleData', state.filtered),
+      }
+    case ActionTypes.UPDATE_CURRENT_VEHICLE:
+      return {
+        ...state,
+        currentVehicle: get(action, 'payload.vehicle', state.currentVehicle)
+      }
     case ActionTypes.SORT_BY_RECENTLY_ADDED:
-      return sortBy(state, ['created_at']).reverse()
+      return {
+        unfiltered: sortBy(state, ['created_at']).reverse(),
+        filtered: sortBy(state, ['created_at']).reverse(),
+      }
     case ActionTypes.SORT_BY_YEAR_NEWEST_OLDEST:
-      return sortBy(state, ['year']).reverse()
+      return {
+        unfiltered: sortBy(state, ['year']).reverse(),
+        filtered: sortBy(state, ['year']).reverse(),
+      }
     case ActionTypes.SORT_BY_YEAR_OLDEST_NEWEST:
-      return sortBy(state, ['year'])
+      return {
+        unfiltered: sortBy(state, ['year']),
+        filtered: sortBy(state, ['year']),
+      }
     case ActionTypes.SORT_BY_MILEAGE_LOW_HIGH:
-      return sortBy(state, ['mileage'])
+      return {
+        unfiltered: sortBy(state, ['mileage']),
+        filtered: sortBy(state, ['mileage']),
+      }
     case ActionTypes.SORT_BY_MILEAGE_HIGH_LOW:
-      return sortBy(state, ['mileage']).reverse()
+      return {
+        unfiltered: sortBy(state, ['mileage']).reverse(),
+        filtered: sortBy(state, ['mileage']).reverse(),
+      }
+    case ActionTypes.FILTER:
+      return {
+        ...state,
+        filtered: get(action, 'payload.filtered', state.filtered),
+      }
     default:
       return state
   }

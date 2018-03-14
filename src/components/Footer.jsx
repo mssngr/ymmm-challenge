@@ -33,7 +33,7 @@ class Footer extends React.Component {
 }
 
 const mapState = state => ({
-  vehicleData: get(state, 'vehicles'),
+  vehicleData: get(state, 'vehicles.filtered'),
   currentPage: get(state, 'pages.currentPage'),
   itemsPerPage: get(state, 'pages.itemsPerPage'),
 })
