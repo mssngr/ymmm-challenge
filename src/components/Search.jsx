@@ -6,6 +6,7 @@ import SearchInput, {createFilter} from 'react-search-input'
 
 import Actions from '../state/actions'
 
+/* STYLES */
 const VehicleSearch = styled(SearchInput)`
   width: 200px;
   max-width: 47%;
@@ -34,6 +35,8 @@ const VehicleSearch = styled(SearchInput)`
   }
 `
 
+/* PRESENTATION/LOGIC */
+// These are the properties that search is looking through in each vehicle object
 const KEYS_TO_FILTERS = ['year', 'make', 'model']
 
 class Search extends React.Component {

@@ -5,6 +5,7 @@ import PropTypes from 'prop-types'
 
 import arrow from '../assets/svg/arrow.svg'
 
+/* STYLES */
 const PaginationContainer = styled.div`
   display: flex;
   flex-wrap: nowrap;
@@ -39,11 +40,12 @@ export const PageNumber = styled.a`
   `}
 `
 
+/* PRESENTATION/LOGIC */
 class Pagination extends React.Component {
   static propTypes = {
     currentPage: PropTypes.number,
-    onSelect: PropTypes.func,
     totalPages: PropTypes.number,
+    onSelect: PropTypes.func, // The function fired when an option is selected
   }
 
   state = {
@@ -55,6 +57,7 @@ class Pagination extends React.Component {
 
   handleIncrementPage = () => {
     const {currentPage, onSelect, totalPages} = this.props
+    // As long as we aren't on the last page, go ahead and increment
     if (currentPage !== totalPages) {
       onSelect(currentPage + 1)
     }
@@ -62,6 +65,7 @@ class Pagination extends React.Component {
 
   handleDecrementPage = () => {
     const {currentPage, onSelect} = this.props
+    // As long as we aren't on the first page, go ahead and decrement
     if (currentPage !== 1) {
       onSelect(currentPage - 1)
     }
@@ -73,6 +77,7 @@ class Pagination extends React.Component {
 
   componentWillUpdate (nextProps) {
     const {pageNumberSet} = this.state
+    // Determine the last and first pages in the current set
     const lastPageInSet = pageNumberSet * 8
     const firstPageInSet = lastPageInSet - 7
 
@@ -93,10 +98,17 @@ class Pagination extends React.Component {
   render () {
     const {totalPages, currentPage} = this.props
     const {pageNumberSet} = this.state
+
+    // Create an array that can be sliced and mapped over
     const totalPagesArray = fill(Array(totalPages), '')
+    // Determine the first and last pages in the set
     const lastPageInSet = pageNumberSet * 8
     const firstPageInSet = lastPageInSet - 8
+    // Determine the current pages by taking a slice of the total pages
+    // using the calculated first and last pages in the set
     const currentPages = totalPagesArray.slice(firstPageInSet, lastPageInSet)
+
+    // If there is more than one page, show pagination
     if (totalPages > 1) {
       return (
         <PaginationContainer>
@@ -117,6 +129,7 @@ class Pagination extends React.Component {
         </PaginationContainer>
       )
     } else {
+      // Otherwise, show nothing
       return null
     }
   }

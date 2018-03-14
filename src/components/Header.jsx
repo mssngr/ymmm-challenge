@@ -7,6 +7,7 @@ import arrow2 from '../assets/svg/arrow2.svg'
 import Actions from '../state/actions'
 import Search from './Search'
 
+/* STYLES */
 const HeaderContainer = styled.div`
   position: fixed;
   top: 0;
@@ -53,10 +54,13 @@ const Close = styled.img`
   width: 20px;
 `
 
+/* PRESENTATION/LOGIC */
 class Header extends React.Component {
   setSorting = e => {
     const method = e.target.value
-    method && this.props[method]()
+    // If a sorting method was selected, ensure a matching method exists from mapActions,
+    // and call that matching method
+    method && this.props[method] && this.props[method]()
   }
 
   clearCurrentVehicle = () => {
@@ -67,10 +71,18 @@ class Header extends React.Component {
 
   render () {
     const {currentVehicle} = this.props
-    return (
-      <HeaderContainer currentVehicle={currentVehicle}>
-        {!currentVehicle && <Search />}
-        {!currentVehicle && (
+    // If there is a selected vehicle, show the close button in the header
+    if (currentVehicle) {
+      return (
+        <HeaderContainer currentVehicle>
+          <Close src={close} onClick={this.clearCurrentVehicle} />
+        </HeaderContainer>
+      )
+    } else {
+      // Otherwise, show Search and SortBy in the header
+      return (
+        <HeaderContainer>
+          <Search />
           <SortBy onChange={this.setSorting}>
             <option value="">Sort by...</option>
             <option value="sortByRecentlyAdded">Recently Added</option>
@@ -79,10 +91,9 @@ class Header extends React.Component {
             <option value="sortByMileageLowHigh">Mileage: Low-High</option>
             <option value="sortByMileageHighLow">Mileage: High–Low</option>
           </SortBy>
-        )}
-        {currentVehicle && <Close src={close} onClick={this.clearCurrentVehicle} />}
-      </HeaderContainer>
-    )
+        </HeaderContainer>
+      )
+    }
   }
 }
 

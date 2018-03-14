@@ -5,6 +5,7 @@ import moment from 'moment'
 
 import carIcon from '../assets/svg/carIcon.svg'
 
+/* STYLES */
 const Container = styled.div`
   flex: 1;
   display: flex;
@@ -49,6 +50,7 @@ const Title = styled.h3`
   font-size: 24px;
 `
 
+/* PRESENTATION/LOGIC */
 class VehicleDetail extends React.Component {
   render () {
     const {vehicle} = this.props

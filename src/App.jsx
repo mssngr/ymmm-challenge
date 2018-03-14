@@ -7,7 +7,7 @@ import Header from './components/Header'
 import VehicleList from './components/VehicleList'
 import Footer from './components/Footer'
 import VehicleDetail from './components/VehicleDetail'
-import './App.css'
+import './App.css' // Additional global resets and defaults
 
 const AppContainer = styled.div`
   position: relative;
@@ -24,6 +24,7 @@ const AppContainer = styled.div`
 export class App extends React.Component {
   render() {
     const {currentVehicle} = this.props
+    // The App displays different views all based on if a "currentVehicle" is selected
     return (
       <AppContainer>
         <Header currentVehicle={currentVehicle} />
