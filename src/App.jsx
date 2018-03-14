@@ -21,7 +21,7 @@ const AppContainer = styled.div`
   font-size: 14px;
 `
 
-class App extends React.Component {
+export class App extends React.Component {
   render() {
     const {currentVehicle} = this.props
     return (

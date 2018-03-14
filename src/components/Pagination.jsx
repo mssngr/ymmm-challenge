@@ -50,7 +50,7 @@ class Pagination extends React.Component {
     // Each page number set represents 8 pages.
     // Every time the page number set is incremented or decremented,
     // the page numbers available increase or decrease by a multiple of 8
-    pageNumberSet: 1,
+    pageNumberSet: Math.ceil((this.props.currentPage / this.props.totalPages) / (8 / this.props.totalPages)),
   }
 
   handleIncrementPage = () => {
@@ -75,12 +75,18 @@ class Pagination extends React.Component {
     const {pageNumberSet} = this.state
     const lastPageInSet = pageNumberSet * 8
     const firstPageInSet = lastPageInSet - 7
-    // If the next page exceeds the last page of the set, increment the page number set
+
+    // If total pages updates, update the page number set calculation
+    if (this.props.totalPages !== nextProps.totalPages) {
+      this.setState({pageNumberSet: Math.ceil((nextProps.currentPage / nextProps.totalPages) / (8 / nextProps.totalPages))})
+    }
+
+    // If the next page exceeds the last page of the set, update the page number set calculation
     if (nextProps.currentPage > lastPageInSet) {
-      this.setState({pageNumberSet: pageNumberSet + 1})
-    // If the new current page is before the first page in the set, decrement the page number set
+      this.setState({pageNumberSet: Math.ceil((nextProps.currentPage / nextProps.totalPages) / (8 / nextProps.totalPages))})
+    // If the new current page is before the first page in the set, update the page number set calculation
     } else if (nextProps.currentPage < firstPageInSet) {
-      this.setState({pageNumberSet: pageNumberSet - 1})
+      this.setState({pageNumberSet: Math.ceil((nextProps.currentPage / nextProps.totalPages) / (8 / nextProps.totalPages))})
     }
   }
 
